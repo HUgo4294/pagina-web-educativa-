@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métodos Numéricos</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <div class="header">
+            <h1>Métodos Numéricos</h1>
+            <p>Newton-Raphson y Newton-Raphson Modificado</p>
+        </div>
+
+        <div class="formulario">
+
+            <label>Método</label>
+
+            <select id="metodo">
+                <option value="newton">Newton-Raphson</option>
+                <option value="modificado">Newton-Raphson Modificado</option>
+            </select>
+
+            <label>Función f(x)</label>
+            <input type="text" id="funcion" placeholder="Ejemplo: x*x*x - x - 2">
+
+            <label>Primera derivada f'(x)</label>
+            <input type="text" id="derivada1" placeholder="Ejemplo: 3*x*x - 1">
+
+            <label>Segunda derivada f''(x)</label>
+            <input type="text" id="derivada2" placeholder="Ejemplo: 6*x">
+
+            <label>Valor inicial</label>
+            <input type="number" id="x0" placeholder="Ejemplo: 1.5">
+
+            <button onclick="resolver()">
+                Calcular Método
+            </button>
+
+        </div>
+
+        <div class="resultado-card" id="resultado">
+            <h2>Resultados</h2>
+            <p>Aquí aparecerán los resultados.</p>
+        </div>
+
+        <div class="tabla-card">
+
+            <h2>Tabla de Iteraciones</h2>
+
+            <table id="tabla">
+
+                <thead>
+                    <tr>
+                        <th>Iteración</th>
+                        <th>x</th>
+                        <th>Error</th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+
+            </table>
+
+        </div>
+
+        <div class="grafica-card">
+
+            <h2>Gráfica de la Función</h2>
+
+            <canvas id="grafica"></canvas>
+
+        </div>
+
+        <div class="info-card">
+
+            <h2>Fórmulas Utilizadas</h2>
+
+            <div class="formula">
+
+                <h3>Newton-Raphson</h3>
+
+                <p>
+                    xₙ₊₁ = xₙ - f(xₙ) / f'(xₙ)
+                </p>
+
+            </div>
+
+            <div class="formula">
+
+                <h3>Newton-Raphson Modificado</h3>
+
+                <p>
+                    xₙ₊₁ = xₙ - [f(xₙ)f'(xₙ)] / [(f'(xₙ))² - f(xₙ)f''(xₙ)]
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
