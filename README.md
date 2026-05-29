@@ -24,7 +24,7 @@
 
 ---
 
-##  Captura de Pantalla
+##  Vista Previa de la pagina 
 <img width="1350" height="646" alt="image" src="https://github.com/user-attachments/assets/ec891adf-3f11-42d4-8420-2b59a2a31055" />
 
 
