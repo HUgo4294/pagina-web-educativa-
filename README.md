@@ -2,7 +2,7 @@
 
 ¡Bienvenido! Esta es una aplicación web interactiva diseñada para resolver ecuaciones utilizando los métodos de **Newton-Raphson** y **Series de Taylor**. Proyecto desarrollado para la clase de Métodos Numéricos.
 
-**[¡Prueba la aplicación aquí en vivo!]((https://hugo4294.github.io/pagina-web-educativa-/))**
+🌐 **[¡Prueba la aplicación aquí en vivo!](https://hugo4294.github.io/pagina-web-educativa-/)**
 
 ---
 
