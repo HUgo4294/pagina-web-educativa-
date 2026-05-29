@@ -1,16 +1,30 @@
-// --- VARIABLES GLOBALES ---
+// --- LÓGICA DE PROCESAMIENTO NUMÉRICO ---
 let miGrafica = null;
 
-// Carga automática inicial al abrir la aplicación
+// Ejecución automática inicial
 window.onload = function() {
     resolver();
 };
 
-// --- CONTROL DE APERTURA DEL MENÚ (DROPDOWN) ---
-function toggleEjemplos(event) {
-    if (event) {
-        event.stopPropagation();
+// Interactividad de la Guía Teórica (Intercambio de pestañas)
+function cambiarTeoria(metodoKey, vista, botonPresionado) {
+    document.getElementById(`${metodoKey}-formula`).style.display = 'none';
+    document.getElementById(`${metodoKey}-def`).style.display = 'none';
+    
+    document.getElementById(`${metodoKey}-${vista}`).style.display = 'block';
+    
+    const contenedorBotones = botonPresionado.parentElement;
+    const botones = contenedorBotones.getElementsByClassName('btn-teoria');
+    for (let i = 0; i < botones.length; i++) {
+        botones[i].classList.remove('active');
     }
+    
+    botonPresionado.classList.add('active');
+}
+
+// Control del menú desplegable de ejemplos
+function toggleEjemplos(event) {
+    if (event) event.stopPropagation();
     const despliegue = document.getElementById("desplegable-ejemplos");
     despliegue.classList.toggle("mostrar");
 }
@@ -19,29 +33,26 @@ function cargarEjemplo(funcion, x0, metodo) {
     document.getElementById('funcion').value = funcion;
     document.getElementById('x0').value = x0;
     document.getElementById('metodo').value = metodo;
-    
     document.getElementById('derivada1').value = '';
     document.getElementById('derivada2').value = '';
     
-    const despliegue = document.getElementById("desplegable-ejemplos");
-    despliegue.classList.remove("mostrar");
-    
+    document.getElementById("desplegable-ejemplos").classList.remove("mostrar");
     resolver();
 }
 
+// Cerrar menú si se hace clic afuera
 window.onclick = function(event) {
     if (!event.target.matches('.btn-nav')) {
         const dropdowns = document.getElementsByClassName("dropdown-contenido");
         for (let i = 0; i < dropdowns.length; i++) {
-            let openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('mostrar')) {
-                openDropdown.classList.remove('mostrar');
+            if (dropdowns[i].classList.contains('mostrar')) {
+                dropdowns[i].classList.remove('mostrar');
             }
         }
     }
 }
 
-// --- PROCESAMIENTO NUMÉRICO (NEWTON-RAPHSON) ---
+// ALGORITMO PRINCIPAL
 function resolver() {
     const metodo = document.getElementById('metodo').value;
     const funcionTexto = document.getElementById('funcion').value.trim();
@@ -64,6 +75,7 @@ function resolver() {
     let iteraciones = [];
 
     try {
+        // Cálculo de derivadas automáticas si están vacías
         if (!d1Texto) { 
             d1Texto = math.derivative(funcionTexto, 'x').toString(); 
             document.getElementById('derivada1').value = d1Texto;
@@ -86,7 +98,7 @@ function resolver() {
             let current_fdx = f_der1.evaluate({x: xn});
 
             if (Math.abs(current_fdx) < 1e-14) {
-                alert("La derivada se aproximó críticamente a cero en x = " + xn);
+                alert("La derivada colapsó a cero en x = " + xn);
                 break;
             }
 
@@ -95,7 +107,6 @@ function resolver() {
             } else {
                 let current_fddx = f_der2.evaluate({x: xn});
                 let denominador = Math.pow(current_fdx, 2) - (current_fx * current_fddx);
-                
                 if (Math.abs(denominador) < 1e-14) {
                     alert("El denominador del método modificado colapsó a cero.");
                     break;
@@ -105,14 +116,16 @@ function resolver() {
 
             iter++;
             error = xn !== 0 ? Math.abs((xn - x_anterior) / xn) : Math.abs(xn - x_anterior);
-
-            let next_fx = f.evaluate({x: xn});
-            iteraciones.push({ iter: iter, x: xn, fx: next_fx, error: error });
+            iteraciones.push({ iter: iter, x: xn, fx: f.evaluate({x: xn}), error: error });
         }
 
-        // Mostrar el bloque de resultados oculto
-        document.getElementById('contenedor-resultados').style.display = 'block';
+        // MOSTRAR CONTENEDOR DE RESULTADOS
+        const contenedorRes = document.getElementById('contenedor-resultados');
+        if (contenedorRes) {
+            contenedorRes.style.display = 'block';
+        }
 
+        // Renderizar componentes
         actualizarResultadosHtml(iteraciones, digitos, metodo);
         actualizarTablaHtml(iteraciones, digitos);
         generarGraficaConTangente(funcionTexto, d1Texto, x0, xn);
@@ -126,40 +139,41 @@ function resolver() {
 function actualizarResultadosHtml(iteraciones, digitos, metodo) {
     const resDiv = document.getElementById('resultado');
     const ultima = iteraciones[iteraciones.length - 1];
-    
     resDiv.innerHTML = `
         <h2>Reporte Analítico</h2>
-        <p>• <strong>Método seleccionado:</strong> ${metodo === 'newton' ? 'Newton-Raphson Estándar' : 'Newton-Raphson Modificado'}</p>
-        <p>• Raíz calculada aproximada: <strong style="color: #60a5fa; font-size: 1.1rem;">${ultima.x.toFixed(digitos)}</strong></p>
-        <p>• Convergencia completada en <strong>${ultima.iter}</strong> iteraciones.</p>
-        <p>• Residual f(x_n): <code>${ultima.fx.toExponential(4)}</code></p>
+        <p style="margin-bottom: 6px;">• <strong>Algoritmo:</strong> ${metodo === 'newton' ? 'Newton-Raphson Clásico' : 'Newton-Raphson Modificado'}</p>
+        <p style="margin-bottom: 6px;">• Aproximación de la Raíz: <strong style="color: #60a5fa; font-size: 1.1rem;">${ultima.x.toFixed(digitos)}</strong></p>
+        <p style="margin-bottom: 6px;">• Iteraciones requeridas: <strong>${ultima.iter}</strong></p>
+        <p>• Tolerancia Residual f(x): <code style="color: #f59e0b;">${ultima.fx.toExponential(4)}</code></p>
     `;
 }
 
 function actualizarTablaHtml(iteraciones, digitos) {
     const tbody = document.querySelector('#tabla tbody');
     tbody.innerHTML = "";
-    
     iteraciones.forEach(i => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td><strong>${i.iter}</strong></td>
             <td>${i.x.toFixed(digitos)}</td>
             <td>${i.fx.toExponential(4)}</td>
-            <td>${i.error ? i.error.toExponential(4) : '— (Punto Inicial)'}</td>
+            <td>${i.error ? i.error.toExponential(4) : '— (Inicio)'}</td>
         `;
         tbody.appendChild(tr);
     });
 }
 
+// Generador de la curva f(x) e interpretación geométrica
 function generarGraficaConTangente(funcionTxt, derivadaTxt, x_inicial, raiz) {
-    const ctx = document.getElementById('grafica').getContext('2d');
+    const canvas = document.getElementById('grafica');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
     if (miGrafica) { miGrafica.destroy(); }
 
     const expr_f = math.compile(funcionTxt);
     const expr_df = math.compile(derivadaTxt);
 
-    const rangoX = Math.max(Math.abs(x_inicial - raiz) * 2.0, 3.0);
+    const rangoX = Math.max(Math.abs(x_inicial - raiz) * 2.2, 3.0);
     const minX = raiz - rangoX;
     const maxX = raiz + rangoX;
     
@@ -169,8 +183,7 @@ function generarGraficaConTangente(funcionTxt, derivadaTxt, x_inicial, raiz) {
 
     const f_x0 = expr_f.evaluate({x: x_inicial});
     const df_x0 = expr_df.evaluate({x: x_inicial});
-
-    const pasos = 60;
+    const pasos = 50;
     const delta = (maxX - minX) / pasos;
 
     for (let i = 0; i <= pasos; i++) {
@@ -185,31 +198,12 @@ function generarGraficaConTangente(funcionTxt, derivadaTxt, x_inicial, raiz) {
         data: {
             labels: labels,
             datasets: [
+                { label: 'f(x) Curva', data: valoresF, borderColor: '#3b82f6', borderWidth: 2.5, pointRadius: 0, fill: false },
+                { label: 'Tangente en x0', data: valoresTangente, borderColor: '#f59e0b', borderWidth: 1.5, borderDash: [5, 5], pointRadius: 0, fill: false },
                 { 
-                    label: 'f(x) Curva Real', 
-                    data: valoresF, 
-                    borderColor: '#3b82f6', 
-                    borderWidth: 3, 
-                    pointRadius: 0, 
-                    fill: false 
-                },
-                { 
-                    label: 'Recta Tangente Inicial (x0)', 
-                    data: valoresTangente, 
-                    borderColor: '#f59e0b', 
-                    borderWidth: 1.5, 
-                    borderDash: [5, 5], 
-                    pointRadius: 0, 
-                    fill: false 
-                },
-                { 
-                    label: 'Raíz Encontrada', 
+                    label: 'Raíz', 
                     data: labels.map(l => Math.abs(parseFloat(l) - raiz) < (delta * 0.95) ? expr_f.evaluate({x: raiz}) : null), 
-                    pointRadius: 8, 
-                    pointBackgroundColor: '#ef4444', 
-                    borderColor: '#fff', 
-                    borderWidth: 2, 
-                    showLine: false 
+                    pointRadius: 7, pointBackgroundColor: '#ef4444', borderColor: '#fff', borderWidth: 2, showLine: false 
                 }
             ]
         },
@@ -217,8 +211,8 @@ function generarGraficaConTangente(funcionTxt, derivadaTxt, x_inicial, raiz) {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-                x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } }
+                y: { grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#94a3b8' } },
+                x: { grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#94a3b8' } }
             },
             plugins: { legend: { labels: { color: '#f1f5f9' } } }
         }

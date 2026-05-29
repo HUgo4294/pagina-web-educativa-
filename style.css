@@ -1,4 +1,20 @@
-/* --- CONFIGURACIÓN GENERAL --- */
+/* ==========================================================================
+   1. VARIABLES DE DISEÑO Y CONFIGURACIÓN BASE
+   ========================================================================== */
+:root {
+    --panel-bg: rgba(15, 23, 42, 0.65);
+    --panel-border: rgba(255, 255, 255, 0.08);
+    --color-primary: #3b82f6;
+    --color-primary-glow: #60a5fa;
+    --color-accent: #f59e0b;
+    --color-danger: #ef4444;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-accent: #38bdf8;
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,39 +22,62 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Combinamos una imagen abstracta de cuadrícula/matemáticas con capas de degradado oscuro */
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: 
-        linear-gradient(to bottom, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)),
+        linear-gradient(to bottom, rgba(10, 15, 30, 0.9), rgba(8, 12, 24, 0.97)),
         url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1200&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed; /* Hace que el fondo se quede quieto mientras bajas en la página */
-    color: #f1f5f9;
+    background-attachment: fixed;
+    color: var(--text-main);
     min-height: 100vh;
-    padding: 90px 20px 30px 20px;
+    padding: 100px 24px 40px 24px;
+    line-height: 1.5;
 }
 
 .contenedor {
-    max-width: 1200px;
-    margin: auto;
+    max-width: 1240px;
+    margin: 0 auto;
+    animation: aparecer 0.6s ease-out;
 }
 
-/* --- ESTILOS DE LA NAVBAR --- */
+.header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+/* ==========================================================================
+   2. NAVBAR Y MENÚ DESPLEGABLE CORREGIDO (CON SCROLL)
+   ========================================================================== */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(8, 12, 24, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--panel-border);
     z-index: 1000;
-    padding: 15px 25px;
+    padding: 16px 32px;
 }
 
 .nav-contenedor {
-    max-width: 1200px;
+    max-width: 1240px;
     margin: auto;
     display: flex;
     justify-content: space-between;
@@ -46,311 +85,386 @@ body {
 }
 
 .nav-logo {
-    font-weight: bold;
-    color: #60a5fa;
-    font-size: 1.2rem;
-    letter-spacing: 0.5px;
+    font-weight: 700;
+    color: var(--color-primary-glow);
+    font-size: 1.25rem;
 }
 
 .nav-menu {
     position: relative;
-    display: inline-block;
 }
 
 .btn-nav {
-    background: none;
-    border: none;
-    color: #3b82f6;
-    font-size: 1rem;
-    font-weight: bold;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: var(--text-accent);
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
-    padding: 5px 10px;
-    transition: color 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: var(--transition-smooth);
 }
 
 .btn-nav:hover {
-    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.2);
+    border-color: var(--color-primary-glow);
 }
 
-/* --- DROPDOWN PANEL DE EJEMPLOS --- */
+/* CORRECCIÓN DEFINITIVA DEL CORTE DE EJEMPLOS */
 .dropdown-contenido {
     display: none;
     position: absolute;
     right: 0;
-    background-color: #1e293b;
-    box-shadow: 0px 12px 30px rgba(0,0,0,0.7);
-    border-radius: 12px;
+    top: calc(100% + 12px);
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-lg);
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     z-index: 1001;
-    margin-top: 12px;
-    padding: 20px;
+    padding: 24px;
+    width: 480px;
+    
+    max-height: 70vh; /* Limita la altura del cuadro al 70% de la pantalla del monitor */
+    overflow-y: auto; /* Activa el scroll vertical interno */
 }
 
-.dropdown-expandido {
-    width: 500px;
-    max-height: 75vh;
-    overflow-y: auto;
+/* Diseño elegante de scrollbar para la caja de ejemplos */
+.dropdown-contenido::-webkit-scrollbar {
+    width: 6px;
+}
+.dropdown-contenido::-webkit-scrollbar-track {
+    background: transparent;
+}
+.dropdown-contenido::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.4);
+    border-radius: 10px;
+}
+.dropdown-contenido::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.7);
 }
 
 .seccion-dropdown h3 {
-    color: #60a5fa;
-    font-size: 1.1rem;
+    color: var(--color-primary-glow);
+    font-size: 1.05rem;
     margin-bottom: 12px;
-    padding-bottom: 5px;
 }
 
 .tabla-algoritmo {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    background: rgba(15, 23, 42, 0.5);
-    padding: 15px;
-    border-radius: 8px;
+    gap: 12px;
+    background: rgba(8, 12, 24, 0.6);
+    padding: 16px;
+    border-radius: 10px;
 }
 
 .paso-item {
     font-size: 0.85rem;
-    line-height: 1.5;
     color: #cbd5e1;
 }
 
 .paso-item strong {
-    color: #f59e0b;
+    color: var(--color-accent);
 }
 
 .divisor-dropdown {
     border: 0;
     height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 20px 0;
 }
 
 .ejemplo-bloque {
-    background: rgba(30, 41, 59, 0.9);
+    background: rgba(30, 41, 59, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 8px;
+    padding: 16px;
+    border-radius: 10px;
     margin-bottom: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition-smooth);
 }
 
 .ejemplo-bloque:hover {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: #3b82f6;
-    transform: translateY(-2px);
-}
-
-.ejemplo-bloque h4 {
-    color: #f1f5f9;
-    font-size: 1rem;
-    margin-bottom: 5px;
+    background: rgba(59, 130, 246, 0.12);
+    border-color: var(--color-primary-glow);
 }
 
 .meta-ejemplo {
     font-size: 0.85rem;
-    color: #f59e0b;
+    color: var(--color-accent);
     font-family: monospace;
-    margin-bottom: 5px;
 }
 
 .descripcion-ejemplo {
     font-size: 0.8rem;
-    color: #94a3b8;
-    line-height: 1.4;
+    color: var(--text-muted);
 }
 
 .mostrar {
     display: block !important;
 }
 
-/* --- HEADER ENTRADA --- */
-.header {
-    text-align: center;
-    margin-bottom: 35px;
-}
-
-.header h1 {
-    font-size: 2.6rem;
-    background: linear-gradient(to right, #60a5fa, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 8px;
-}
-
-.header p {
-    color: #94a3b8;
-    font-size: 1.1rem;
-}
-
-/* --- INTERFAZ LADO A LADO --- */
-.layout-superior {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-    margin-bottom: 25px;
-}
-
-.layout-superior .info-card {
-    flex: 1.3;
-    min-width: 350px;
-}
-
-.layout-superior .formulario {
-    flex: 1;
-    min-width: 320px;
-}
-
-/* --- TARJETAS --- */
+/* ==========================================================================
+   3. ESTILIZACIÓN DE TARJETAS CONTENEDORAS (GLASSMORPHISM ORIGINAL)
+   ========================================================================== */
 .info-card, .formulario, .resultado-card, .tabla-card, .grafica-card {
-    background: rgba(30, 41, 59, 0.5);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-.resultado-card, .tabla-card, .grafica-card {
-    margin-bottom: 25px;
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--panel-border);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
 }
 
 h2 {
-    font-size: 1.3rem;
-    color: #f1f5f9;
-    margin-bottom: 18px;
-    border-left: 4px solid #3b82f6;
-    padding-left: 10px;
+    font-size: 1.35rem;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.metodos-container {
+h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+/* ==========================================================================
+   4. ESTRUCTURA Y GRID SUPERIOR (LAYOUT)
+   ========================================================================== */
+.layout-superior {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.layout-superior .info-card { 
+    flex: 1.2; 
+    min-width: 380px; 
+    height: 520px; /* Mantiene simetría estricta con el panel de la derecha */
     display: flex;
     flex-direction: column;
-    gap: 15px;
 }
 
-.metodo-explicacion {
-    background: rgba(15, 23, 42, 0.4);
-    padding: 15px;
-    border-radius: 10px;
+.layout-superior .formulario { 
+    flex: 1; 
+    min-width: 340px; 
+}
+
+/* ==========================================================================
+   5. CONTENEDORES INTERNOS DE LA GUÍA TEÓRICA
+   ========================================================================== */
+.metodos-container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    overflow-y: auto; 
+    padding-right: 8px;
+    flex: 1;
+}
+
+.metodos-container::-webkit-scrollbar {
+    width: 6px;
+}
+.metodos-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+.metodos-container::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.35);
+    border-radius: 4px;
+}
+
+.metodo-explicacion { 
+    background: rgba(8, 12, 24, 0.4); 
+    padding: 20px; 
+    border-radius: 12px; 
     border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-/* --- INPUTS --- */
+.metodo-explicacion h3 { 
+    color: var(--text-accent); 
+    margin-bottom: 8px; 
+}
+
+.header-metodo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.header-metodo h3 {
+    margin-bottom: 0 !important;
+}
+
+.toggle-buttons {
+    display: flex;
+    background: rgba(8, 12, 24, 0.6);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-teoria {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-teoria:hover { color: var(--text-main); }
+.btn-teoria.active {
+    background: rgba(59, 130, 246, 0.25);
+    color: var(--text-accent);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   6. DISEÑO DE FRACCIONES MATEMÁTICAS PROFESIONALES (VERTICALES)
+   ========================================================================== */
+.math-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.4rem;
+    color: #f8fafc;
+    margin: 24px 0;
+    user-select: none;
+}
+
+.math-variable { font-style: italic; font-weight: 600; }
+.math-sub {
+    font-size: 0.75rem;
+    vertical-align: sub;
+    position: relative;
+    bottom: -0.2em;
+    margin-left: 1px;
+    color: #94a3b8;
+}
+
+.math-operator { margin: 0 12px; color: #60a5fa; font-weight: bold; }
+.math-fraction { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; padding: 0 8px; }
+.math-numerator { padding: 2px 4px; text-align: center; font-style: italic; }
+.math-denominator {
+    border-top: 1.5px solid rgba(248, 250, 252, 0.65);
+    padding: 6px 4px 2px 4px;
+    text-align: center;
+    font-style: italic;
+}
+
+sup { font-size: 0.75rem; vertical-align: super; }
+
+/* ==========================================================================
+   7. INPUTS Y ELEMENTOS DE FORMULARIO
+   ========================================================================== */
 label {
     display: block;
-    margin-top: 15px;
+    margin-top: 16px;
     margin-bottom: 6px;
-    font-size: 0.8rem;
-    color: #94a3b8;
+    font-size: 0.75rem;
+    color: var(--text-muted);
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 input, select {
     width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: #0f172a;
-    color: #f1f5f9;
-    font-size: 0.95rem;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--panel-border);
+    background: rgba(8, 12, 24, 0.7);
+    color: var(--text-main);
     outline: none;
+    transition: var(--transition-smooth);
 }
 
 input:focus, select:focus {
-    border-color: #3b82f6;
+    border-color: var(--color-primary-glow);
+    background: rgba(8, 12, 24, 0.9);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-.campo-doble {
-    display: flex;
-    gap: 15px;
-}
+.campo-doble { display: flex; gap: 16px; }
+.input-group { flex: 1; }
 
-.input-group {
-    flex: 1;
-}
-
-/* --- BOTÓN --- */
-button:not(.btn-nav) {
+button:not(.btn-nav):not(.btn-teoria) {
     width: 100%;
-    padding: 14px;
-    margin-top: 25px;
+    padding: 16px;
+    margin-top: 28px;
     border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-}
-
-button:not(.btn-nav):hover {
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(59, 130, 246, 0.4);
-}
-
-/* --- TABLAS Y CANVAS --- */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-th {
-    background: #3b82f6;
-    color: white;
-    padding: 12px;
-    font-size: 0.9rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
     font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
 }
 
+button:not(.btn-nav):not(.btn-teoria):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.45);
+}
+
+/* ==========================================================================
+   8. ESTRUCTURA INFERIOR EN PARALELO (TABLA Y GRÁFICA)
+   ========================================================================== */
+.layout-inferior {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.layout-inferior .tabla-card,
+.layout-inferior .grafica-card {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Tablas de Reporte */
+table { width: 100%; border-collapse: separate; border-spacing: 0; }
+th {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--text-accent);
+    padding: 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+}
 td {
-    padding: 12px;
+    padding: 14px;
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.9rem;
-    color: #cbd5e1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: monospace;
+    color: #e2e8f0;
 }
+tr:hover td { background: rgba(255, 255, 255, 0.04); }
 
-tr:hover td {
-    background: rgba(255, 255, 255, 0.03);
-    color: white;
+/* Contenedores de Gráfica */
+.canvas-container {
+    position: relative;
+    height: 380px;
+    width: 100%;
 }
-
 canvas {
-    background: #0f172a;
-    border-radius: 12px;
-    padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* --- ANIMACIONES --- */
-@keyframes aparecer {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width: 850px) {
-    .layout-superior {
-        flex-direction: column;
-    }
-    .layout-superior .info-card, 
-    .layout-superior .formulario {
-        width: 100%;
-        flex: none;
-    }
-    .dropdown-expandido {
-        width: 300px;
-    }
-}
+    background: rgba(8, 12, 24, 0.65) !important;
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid var(--panel

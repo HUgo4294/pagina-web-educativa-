@@ -3,48 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Científica - Métodos Numéricos</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Calculadora Pro de Newton-Raphson</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <nav class="navbar">
         <div class="nav-contenedor">
-            <span class="nav-logo">Análisis Numérico</span>
+            <div class="nav-logo">⚡ Newton-Raphson Solver</div>
             <div class="nav-menu">
-                <button class="btn-nav" onclick="toggleEjemplos(event)">Método y Ejemplos Detallados ▾</button>
-                
-                <div id="desplegable-ejemplos" class="dropdown-contenido dropdown-expandido">
+                <button class="btn-nav" onclick="toggleEjemplos(event)">📚 Método y Ejemplos Detallados ▾</button>
+                <div id="desplegable-ejemplos" class="dropdown-contenido">
                     <div class="seccion-dropdown">
-                        <h3>📋 Algoritmo de Newton-Raphson</h3>
+                        <h3>Guía Algorítmica Rápida</h3>
                         <div class="tabla-algoritmo">
-                            <div class="paso-item"><strong>Paso 1:</strong> Encuentra puntos \(a\) y \(b\) tales que \(a < b\) y \(f(a) \cdot f(b) < 0\).</div>
-                            <div class="paso-item"><strong>Paso 2:</strong> Toma el intervalo \([a, b]\) y calcula el valor inicial \(x_0 = \frac{a+b}{2}\).</div>
-                            <div class="paso-item"><strong>Paso 3:</strong> Halla \(f(x_0)\) y \(f'(x_0)\) para calcular la aproximación: \(x_1 = x_0 - \frac{f(x_0)}{f'(x_0)}\).</div>
-                            <div class="paso-item"><strong>Paso 4:</strong> Si \(f(x_1) = 0\), entonces \(x_1\) es una raíz exacta; de lo contrario, \(x_0 = x_1\).</div>
-                            <div class="paso-item"><strong>Paso 5:</strong> Repita los pasos 3 y 4 hasta que \(f(x_i) = 0\) o \(|f(x_i)| \le \text{Tolerancia}\).</div>
+                            <div class="paso-item"><strong>1.</strong> Define la función continua f(x) y estima un punto inicial x₀.</div>
+                            <div class="paso-item"><strong>2.</strong> Evalúa la tasa de cambio mediante su primera derivada f'(x).</div>
+                            <div class="paso-item"><strong>3.</strong> Aplica la fórmula iterativa para aproximar progresivamente el punto de raíz.</div>
                         </div>
                     </div>
-                    
                     <hr class="divisor-dropdown">
+                    <h3>Selecciona un caso de estudio:</h3>
                     
-                    <div class="seccion-dropdown">
-                        <h3>🚀 Ejemplos Guía (Haz clic para cargar)</h3>
-                        <div class="ejemplo-bloque" onclick="cargarEjemplo('x^3 - x - 1', '1.5', 'newton')">
-                            <h4>Ejemplo 1: Función Polinómica Cúbica</h4>
-                            <p class="meta-ejemplo">f(x) = x^3 - x - 1 = 0</p>
-                            <p class="descripcion-ejemplo">Intervalo [1, 2]. Cambio de signo garantizado. Usando x0 = 1.5 converge rápidamente a ≈ 1.3247.</p>
-                        </div>
+                    <div class="ejemplo-bloque" onclick="cargarEjemplo('x^3 - x - 2', '1.5', 'newton')">
+                        <h4>Polinómica Estándar</h4>
+                        <div class="meta-ejemplo">f(x) = x³ - x - 2 | x₀ = 1.5</div>
+                        <div class="descripcion-ejemplo">Ideal para probar la convergencia cuadrática clásica sin complicaciones iniciales.</div>
+                    </div>
 
-                        <div class="ejemplo-bloque" onclick="cargarEjemplo('x^2 - 4', '3', 'newton')">
-                            <h4>Ejemplo 2: Parábola (Raíz Exacta)</h4>
-                            <p class="meta-ejemplo">f(x) = x^2 - 4 = 0</p>
-                            <p class="descripcion-ejemplo">Derivada 2x. Partiendo de x0 = 3, intersecta el eje horizontal directo en x = 2.</p>
-                        </div>
+                    <div class="ejemplo-bloque" onclick="cargarEjemplo('cos(x) - x', '0.5', 'newton')">
+                        <h4>Trascendente (Trigonométrica)</h4>
+                        <div class="meta-ejemplo">f(x) = cos(x) - x | x₀ = 0.5</div>
+                        <div class="descripcion-ejemplo">Punto de cruce clásico de funciones trigonométricas con comportamiento estable.</div>
+                    </div>
+
+                    <div class="ejemplo-bloque" onclick="cargarEjemplo('x^3 - 3*x^2 + 3*x - 1', '1.5', 'modificado')">
+                        <h4>Raíz Múltiple (Caso Crítico)</h4>
+                        <div class="meta-ejemplo">f(x) = x³ - 3x² + 3x - 1 | x₀ = 1.5</div>
+                        <div class="descripcion-ejemplo">Tiene raíz triple en x=1. Se recomienda usar el Método Modificado para no perder velocidad.</div>
                     </div>
                 </div>
             </div>
@@ -52,62 +52,112 @@
     </nav>
 
     <div class="contenedor">
-        <div class="header">
+        <header class="header">
             <h1>Calculadora Pro de Newton-Raphson</h1>
             <p>Soporte analítico de derivadas y precisión numérica</p>
-        </div>
+        </header>
 
         <div class="layout-superior">
             <div class="info-card">
                 <h2>Guía Teórica</h2>
                 <div class="metodos-container">
+                    
                     <div class="metodo-explicacion">
-                        <h3>Newton-Raphson</h3>
-                        <p>Aproximación lineal mediante rectas tangentes sucesivas.</p>
-                        <div class="formula-destacada">
-                            $$x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}$$
+                        <div class="header-metodo">
+                            <h3>Newton-Raphson (Raíces simples)</h3>
+                            <div class="toggle-buttons">
+                                <button class="btn-teoria active" onclick="cambiarTeoria('nr', 'formula', this)">Fórmula</button>
+                                <button class="btn-teoria" onclick="cambiarTeoria('nr', 'def', this)">Definición</button>
+                            </div>
+                        </div>
+                        
+                        <div id="nr-formula" class="contenido-teoria">
+                            <p>Aproximación lineal mediante rectas tangentes sucesivas:</p>
+                            <div class="math-container">
+                                <span class="math-variable">x</span><span class="math-sub">n+1</span>
+                                <span class="math-operator">=</span>
+                                <span class="math-variable">x</span><span class="math-sub">n</span>
+                                <span class="math-operator">-</span>
+                                <div class="math-fraction">
+                                    <div class="math-numerator">f(x<span class="math-sub">n</span>)</div>
+                                    <div class="math-denominator">f'(x<span class="math-sub">n</span>)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="nr-def" class="contenido-teoria" style="display: none;">
+                            <p style="color: #cbd5e1; font-size: 0.9rem;">
+                                Es un algoritmo eficiente para encontrar aproximaciones de los ceros o raíces de una función real. Utiliza la primera derivada para trazar una recta tangente en el punto actual; la intersección de esta recta con el eje X se convierte en la siguiente aproximación mejorada. Su convergencia es cuadrática bajo condiciones ideales.
+                            </p>
                         </div>
                     </div>
 
                     <div class="metodo-explicacion">
-                        <h3>N-R Modificado</h3>
-                        <p>Diseñado para conservar la convergencia rápida ante raíces múltiples.</p>
-                        <div class="formula-destacada">
-                            $$x_{n+1} = x_n - \frac{f(x_n)f'(x_n)}{[f'(x_n)]^2 - f(x_n)f''(x_n)}$$
+                        <div class="header-metodo">
+                            <h3>N-R Modificado (Raíces Múltiples)</h3>
+                            <div class="toggle-buttons">
+                                <button class="btn-teoria active" onclick="cambiarTeoria('nrm', 'formula', this)">Fórmula</button>
+                                <button class="btn-teoria" onclick="cambiarTeoria('nrm', 'def', this)">Definición</button>
+                            </div>
+                        </div>
+                        
+                        <div id="nrm-formula" class="contenido-teoria">
+                            <p>Diseñado para conservar la convergencia rápida ante raíces múltiples incorporando la segunda derivada:</p>
+                            <div class="math-container">
+                                <span class="math-variable">x</span><span class="math-sub">n+1</span>
+                                <span class="math-operator">=</span>
+                                <span class="math-variable">x</span><span class="math-sub">n</span>
+                                <span class="math-operator">-</span>
+                                <div class="math-fraction">
+                                    <div class="math-numerator">f(x<span class="math-sub">n</span>) · f'(x<span class="math-sub">n</span>)</div>
+                                    <div class="math-denominator">[f'(x<span class="math-sub">n</span>)]<sup>2</sup> - f(x<span class="math-sub">n</span>) · f''(x<span class="math-sub">n</span>)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="nrm-def" class="contenido-teoria" style="display: none;">
+                            <p style="color: #cbd5e1; font-size: 0.9rem;">
+                                Variante optimizada para funciones que presentan raíces múltiples (donde la curva es tangente al eje X). El método clásico pierde velocidad disminuyendo a convergencia lineal en estos casos. Al introducir la segunda derivada f''(x), esta modificación reestructura geométricamente el paso iterativo para mantener la velocidad de convergencia cuadrática original.
+                            </p>
                         </div>
                     </div>
+
                 </div>
             </div>
 
             <div class="formulario">
                 <h2>Configuración del Ejercicio</h2>
                 
-                <label>Selecciona el Método</label>
+                <label for="metodo">Selecciona el Método</label>
                 <select id="metodo">
                     <option value="newton">Newton-Raphson (Raíces simples)</option>
-                    <option value="modificado">Newton-Raphson Modificado</option>
+                    <option value="modificado">Newton-Raphson Modificado (Raíces múltiples)</option>
                 </select>
 
-                <label>Función \(f(x)\)</label>
-                <input type="text" id="funcion" placeholder="Ej: 2*x^3 - 2*x - 5">
-
-                <label>Primera Derivada \(f'(x)\) <small>(Opcional)</small></label>
-                <input type="text" id="derivada1" placeholder="Vacío para cálculo automático">
-
-                <label>Segunda Derivada \(f''(x)\) <small>(Opcional)</small></label>
-                <input type="text" id="derivada2" placeholder="Vacío para cálculo automático">
+                <label for="funcion">Función f(x)</label>
+                <input type="text" id="funcion" placeholder="Ej: 2*x^3 - 2*x - 5" value="x^3 - x - 2">
 
                 <div class="campo-doble">
                     <div class="input-group">
-                        <label>Valor Inicial \(x_0\)</label>
-                        <input type="number" id="x0" step="any" placeholder="Ej: 2">
+                        <label for="derivada1">Primera Derivada f'(x) (Opcional)</label>
+                        <input type="text" id="derivada1" placeholder="Vacío para cálculo automático">
                     </div>
                     <div class="input-group">
-                        <label>Imprimir dígitos</label>
+                        <label for="derivada2">Segunda Derivada f''(x) (Opcional)</label>
+                        <input type="text" id="derivada2" placeholder="Vacío para cálculo automático">
+                    </div>
+                </div>
+
+                <div class="campo-doble">
+                    <div class="input-group">
+                        <label for="x0">Valor Inicial x₀</label>
+                        <input type="number" id="x0" step="any" value="1.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="decimales">Imprimir Dígitos</label>
                         <select id="decimales">
                             <option value="4">4 decimales</option>
                             <option value="6" selected>6 decimales</option>
-                            <option value="9">9 decimales</option>
+                            <option value="8">8 decimales</option>
+                            <option value="10">10 decimales</option>
                         </select>
                     </div>
                 </div>
@@ -116,33 +166,33 @@
             </div>
         </div>
 
-        <div class="resultado-card" id="resultado">
-            <h2>Resultados</h2>
-            <p class="placeholder-text">Los reportes y conclusiones aparecerán aquí al calcular.</p>
-        </div>
+        <div id="contenedor-resultados" style="display:none;">
+            <div class="resultado-card" id="resultado"></div>
+            
+            <div class="layout-inferior">
+                <div class="tabla-card">
+                    <h2>Matriz de Convergencia Iterativa</h2>
+                    <div style="overflow-x: auto;">
+                        <table id="tabla">
+                            <thead>
+                                <tr>
+                                    <th>Iteración (n)</th>
+                                    <th>Aproximación (x_n)</th>
+                                    <th>Evaluación (f(x_n))</th>
+                                    <th>Error Relativo</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
 
-        <div class="tabla-card">
-            <h2>Tabla de Iteraciones</h2>
-            <div style="overflow-x: auto;">
-                <table id="tabla">
-                    <thead>
-                        <tr>
-                            <th>Iteración</th>
-                            <th>Valor \(x_n\)</th>
-                            <th>Evaluación \(f(x_n)\)</th>
-                            <th>Error Relativo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="grafica-card" style="max-width: 1000px; margin: auto;">
-            <h2>Visualización Geométrica (Zoom Ajustado)</h2>
-            <div style="height: 400px; position: relative;">
-                <canvas id="grafica"></canvas>
+                <div class="grafica-card">
+                    <h2>Interpretación Geométrica</h2>
+                    <div class="canvas-container">
+                        <canvas id="grafica"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
